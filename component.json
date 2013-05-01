@@ -1,0 +1,8 @@
+{
+  "name": "three",
+  "repo": "lge88/three-build",
+  "scripts": [
+    "three.js"
+  ],
+  "main": "three.js"
+}
