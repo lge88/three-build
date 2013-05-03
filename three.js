@@ -5,6 +5,10 @@
 
 var THREE = THREE || { REVISION: '58' };
 
+if (typeof self === 'undefined') {
+  self = global;
+}
+
 self.console = self.console || {
 
 	info: function () {},
@@ -66,7 +70,7 @@ THREE.extend = function ( obj, source ) {
 // fixes from Paul Irish and Tino Zijdel
 
 ( function () {
-
+    if (typeof window === 'undefined') { return; };
 	var lastTime = 0;
 	var vendors = [ 'ms', 'moz', 'webkit', 'o' ];
 
@@ -22520,8 +22524,12 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 		if ( camera.parent === undefined ) camera.updateMatrixWorld();
 
-		camera.matrixWorldInverse.getInverse( camera.matrixWorld );
+        // enable update camera matrices manually:
 
+        if ( !(camera.matrixWorldInverseAutoUpate === false) ) {
+		  camera.matrixWorldInverse.getInverse( camera.matrixWorld );
+        }
+      
 		_projScreenMatrix.multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse );
 		_frustum.setFromMatrix( _projScreenMatrix );
 
