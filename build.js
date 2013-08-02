@@ -36,7 +36,11 @@ if (!test('-d', conf.dest)) {
   exit(1);
 }
 
-var outro = '\nmodule.exports = exports = THREE;';
+var outro = [
+  'if ( typeof module !== \'undefined\' ) {',
+  '  module.exports = exports = THREE;',
+  '}'
+].join( '\n' );
 
 conf.targets.forEach(function(target) {
   buildTarget(conf.src, conf.dest, target);
@@ -47,7 +51,10 @@ function buildTarget(src, dest, target) {
   target.includes.forEach(function(inc) {
     files = files.concat(JSON.parse(cat(resolve('includes', inc) + '.json')));
   });
-  
+
+  // include Trackball controls
+  files.push( "examples/js/controls/TrackballControls.js" );
+
   files = files.map(function(file) {
     return resolve(src, file);
   });
@@ -64,5 +71,4 @@ function buildTarget(src, dest, target) {
 
 
 // exec('node build.js --include common --include extras --output ' + resolve(__dirname, 'three.js'));
-// exec('node build.js --include common --include extras --minify --output ' + resolve(__dirname, 'three.min.js'));  
-
+// exec('node build.js --include common --include extras --minify --output ' + resolve(__dirname, 'three.min.js'));
