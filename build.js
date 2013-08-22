@@ -54,18 +54,45 @@ function buildTarget(src, dest, target) {
 
   // include Trackball controls
   files.push( "examples/js/controls/TrackballControls.js" );
+  files.push( "examples/js/controls/TransformControls.js" );
 
   files = files.map(function(file) {
     return resolve(src, file);
   });
 
-  var out = cat(files) + outro;
+  var out = files
+    .map( function( f ) {
+      var re = /src\/renderers\/WebGLRenderer\.js/;
+      if ( re.test( f ) ) {
+        var out = cat( f );
+        console.log( 'enableCameraInverseManualUpdate' );
+        return enableCameraInverseManualUpdate( out );
+      } else {
+        return cat( f );
+      }
+    } )
+    .join( '\n' );
+
+  out = out + outro;
 
   if (!target.minify) {
     out.to(resolve(dest, target.name));
   } else {
     uglify.minify(out, { fromString: true }).code.to(resolve(dest, target.name));
   }
+}
+
+function addCommonJSSupport( out ) {
+  return out + outro;
+}
+
+function enableCameraInverseManualUpdate( out ) {
+  var pattern = /camera\.matrixWorldInverse\.getInverse\([ ]?camera\.matrixWorld[ ]?\)/g;
+
+  return out.replace(
+    pattern,
+    '( ( camera.matrixWorldInverseAutoUpate === false ) ? camera.matrixWorldInverse : camera.matrixWorldInverse.getInverse( camera.matrixWorld ) )'
+  );
 }
 
 
