@@ -54,7 +54,8 @@ function buildTarget(src, dest, target) {
 
   // include Trackball controls
   files.push( "examples/js/controls/TrackballControls.js" );
-  files.push( "examples/js/controls/TransformControls.js" );
+  files.push( "examples/js/controls/TrackballControls.js" );
+  files.push( "examples/js/controls/EditorControls.js" );
 
   files = files.map(function(file) {
     return resolve(src, file);
