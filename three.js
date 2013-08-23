@@ -38115,7 +38115,7 @@ THREE.TransformControls = function ( camera, domElement, doc ) {
 
 			currentPlane = 'XZ';
 
-		} 
+		}
 
 		if ( isActive("RZ") ) {
 
@@ -38257,7 +38257,7 @@ THREE.TransformControls = function ( camera, domElement, doc ) {
 						scope.object.position.copy( oldPosition );
 						scope.object.position.add( point );
 
-					} 
+					}
 
 					if ( scope.space == 'world' || isActive("XYZ") ) {
 
@@ -38336,7 +38336,9 @@ THREE.TransformControls = function ( camera, domElement, doc ) {
 
 					} else if ( scope.active == "RXYZE" ) {
 
-						quaternionE.setFromEuler( point.clone().cross(tempVector).normalize() ); // rotation axis
+						// quaternionE.setFromEuler( point.clone().cross(tempVector).normalize() ); // rotation axis
+                        var vec = point.clone().cross(tempVector).normalize();
+						quaternionE.setFromEuler( new THREE.Euler( vec.x, vec.y, vec.z ) ); // rotation axis
 
 						tempQuaternion.setFromRotationMatrix( tempMatrix.getInverse( parentRotationMatrix ) );
 						quaternionX.setFromAxisAngle( quaternionE, - point.clone().angleTo(tempVector) );
